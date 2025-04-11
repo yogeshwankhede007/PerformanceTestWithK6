@@ -1,0 +1,21 @@
+{
+  "name": "performance-testing-k6",
+  "version": "1.0.0",
+  "description": "Performance Testing Framework using K6",
+  "main": "index.js",
+  "scripts": {
+    "test": "k6 run",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "k6": "^0.0.0",
+    "@grafana/k6": "^0.0.0",
+    "k6-html-reporter": "^0.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "@types/k6": "^0.0.0"
+  }
+} 

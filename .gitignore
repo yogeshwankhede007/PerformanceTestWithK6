@@ -1,0 +1,32 @@
+# Node modules (if you're using k6 with npm/yarn for organizing scripts)
+node_modules/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables or secrets
+.env
+.env.local
+
+# VSCode settings
+.vscode/
+
+# Output artifacts (e.g., from k6 summary exports)
+*.json
+*.html
+*.csv
+
+# Coverage reports (if using any kind of JS test coverage tooling)
+coverage/
+
+# Optional: Ignore local test scripts or drafts
+/test-drafts/
+/scripts/temp/

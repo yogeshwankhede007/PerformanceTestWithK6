@@ -1,0 +1,143 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>K6 Test Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            .metric { margin-bottom: 20px; }
+            .metric-title { font-weight: bold; margin-bottom: 10px; }
+        </style>
+    </head>
+    <body>
+        <h1>K6 Test Report</h1>
+        <div class="metric">
+            <div class="metric-title">Metrics Summary</div>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+                
+                    <tr>
+                        <td>http_req_duration{expected_response:true}</td>
+                        <td>{"values":{"avg":26.587047619047624,"min":22.599,"med":24.615,"max":41.24,"p(90)":34.4,"p(95)":35.028},"type":"trend","contains":"time"}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>vus</td>
+                        <td>{"type":"gauge","contains":"default","values":{"value":1,"min":1,"max":2}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_tls_handshaking</td>
+                        <td>{"type":"trend","contains":"time","values":{"max":22.29,"p(90)":0,"p(95)":0,"avg":1.003095238095238,"min":0,"med":0}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_duration</td>
+                        <td>{"type":"trend","contains":"time","values":{"med":157.3965,"max":387.001,"p(90)":334.0129,"p(95)":335.7409,"avg":166.99652380952378,"min":22.599},"thresholds":{"p(95)<500":{"ok":true}}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>iterations</td>
+                        <td>{"type":"counter","contains":"default","values":{"count":21,"rate":1.3111946238023409}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_blocked</td>
+                        <td>{"type":"trend","contains":"time","values":{"avg":1.6779285714285697,"min":0,"med":0.002,"max":35.785,"p(90)":0.002,"p(95)":0.004849999999999995}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_sending</td>
+                        <td>{"type":"trend","contains":"time","values":{"avg":0.32438095238095227,"min":0.056,"med":0.3035,"max":0.677,"p(90)":0.45080000000000003,"p(95)":0.5232499999999999}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>checks</td>
+                        <td>{"type":"rate","contains":"default","values":{"passes":21,"fails":21,"rate":0.5}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_receiving</td>
+                        <td>{"type":"trend","contains":"time","values":{"max":0.28,"p(90)":0.22270000000000004,"p(95)":0.25994999999999996,"avg":0.14683333333333332,"min":0.04,"med":0.137}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_connecting</td>
+                        <td>{"type":"trend","contains":"time","values":{"min":0,"med":0,"max":13.195,"p(90)":0,"p(95)":0,"avg":0.6133333333333333}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>iteration_duration</td>
+                        <td>{"values":{"avg":1339.5378868095238,"min":1300.83275,"med":1331.18675,"max":1424.664708,"p(90)":1396.219333,"p(95)":1401.969583},"type":"trend","contains":"time"}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>vus_max</td>
+                        <td>{"values":{"min":2,"max":2,"value":2},"type":"gauge","contains":"default"}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>data_sent</td>
+                        <td>{"type":"counter","contains":"data","values":{"count":4391,"rate":274.16455205314656}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_failed</td>
+                        <td>{"type":"rate","contains":"default","values":{"rate":0.5,"passes":21,"fails":21},"thresholds":{"rate<0.01":{"ok":false}}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_reqs</td>
+                        <td>{"type":"counter","contains":"default","values":{"count":42,"rate":2.6223892476046817}}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>data_received</td>
+                        <td>{"values":{"count":51009,"rate":3184.8917412158858},"type":"counter","contains":"data"}</td>
+                    </tr>
+                
+                    <tr>
+                        <td>http_req_waiting</td>
+                        <td>{"type":"trend","contains":"time","values":{"p(95)":335.2042,"avg":166.52530952380957,"min":22.088,"med":156.8365,"max":386.385,"p(90)":333.5415}}</td>
+                    </tr>
+                
+            </table>
+        </div>
+        <div class="metric">
+            <div class="metric-title">Checks</div>
+            <table>
+                <tr>
+                    <th>Check</th>
+                    <th>Passed</th>
+                    <th>Failed</th>
+                </tr>
+                
+                    <tr>
+                        <td>type</td>
+                        <td>undefined</td>
+                        <td>undefined</td>
+                    </tr>
+                
+                    <tr>
+                        <td>contains</td>
+                        <td>undefined</td>
+                        <td>undefined</td>
+                    </tr>
+                
+                    <tr>
+                        <td>values</td>
+                        <td>21</td>
+                        <td>21</td>
+                    </tr>
+                
+            </table>
+        </div>
+    </body>
+    </html>
+    

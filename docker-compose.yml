@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=k6
+      - INFLUXDB_USER=admin
+      - INFLUXDB_USER_PASSWORD=admin
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/k6-dashboard.json:/var/lib/grafana/dashboards/k6-dashboard.json
+    depends_on:
+      - influxdb
+
+volumes:
+  influxdb_data:
+  grafana-data: 

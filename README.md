@@ -1,6 +1,6 @@
 # Performance Testing Framework with K6
 
-A comprehensive performance testing framework using K6, following industry best practices and MAANG company standards.
+A comprehensive performance testing framework using K6, following industry best practices and standards.
 
 ## Project Structure
 

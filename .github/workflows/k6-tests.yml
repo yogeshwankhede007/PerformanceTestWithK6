@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  actions: write
+  checks: write
+  id-token: write
+
 jobs:
   k6_tests:
     name: Run K6 Tests
@@ -13,19 +19,23 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install k6
         run: |
-          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install k6
+
+      - name: Create reports directory
+        run: mkdir -p reports
 
       - name: Run Smoke Test
         run: k6 run src/tests/smoke-test.js
@@ -33,11 +43,12 @@ jobs:
       - name: Run API Test
         run: k6 run src/tests/reqres-api-test.js
 
-      - name: Create reports directory
-        run: mkdir -p reports
+      - name: List reports directory
+        run: ls -la reports/
 
       - name: Upload Test Reports
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: k6-test-reports
           path: reports/
@@ -45,7 +56,8 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload Test Summary
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: k6-test-summary
           path: |

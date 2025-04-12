@@ -124,8 +124,6 @@ The [Requirements Document](docs/REQUIREMENTS.md) outlines all technical and fun
 
 ### HTML Report
 ![K6 Load Test Report](https://github.com/user-attachments/assets/c756935d-4f7b-4874-8656-3e209e11b01a)
-![K6 Load Test Stats](https://github.com/user-attachments/assets/6f6fb764-8f6c-45ca-8c2e-c72ffcc2f5aa)
-![K6 Load Test Checks](https://github.com/user-attachments/assets/6e063830-9c22-418f-bcad)
 
 Key Metrics from Latest Run:
 - Total Requests: 3535
@@ -136,7 +134,8 @@ Key Metrics from Latest Run:
 - Virtual Users: Max 10
 
 ### Console Output
-![K6 Console Output](docs/images/console-output.png)
+
+![K6 Console Output](https://github.com/user-attachments/assets/14a66e6e-5df7-49aa-b3ab-4807b85c4e8f)
 
 Sample Response Times:
 - List Users: 56.324ms
@@ -146,7 +145,8 @@ Sample Response Times:
 - Delete User: 304.546ms
 
 ### GitHub Actions Workflow
-![GitHub Actions Jobs](docs/images/github-actions.png)
+![GitHub Actions Jobs](https://github.com/user-attachments/assets/d4869989-6a71-4bc6-85e4-37871a522691)
+
 
 ## 📁 Project Structure
 ```
@@ -259,3 +259,9 @@ MIT License - see [LICENSE](LICENSE) file
 ---
 
 Made with ❤️ by Yogesh Wankhede 
+
+## Documentation
+
+- [Test Plan](docs/TEST_PLAN.md)
+- [Performance Recommendations](docs/PERFORMANCE_RECOMMENDATIONS.md)
+- [API Documentation](docs/API.md)

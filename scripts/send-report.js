@@ -1,40 +1,53 @@
 import { sendEmailReport } from '../src/utils/email-reporter.js';
-import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 
-// Load environment variables
-dotenv.config();
+const testType = process.argv[2] || 'smoke';
+const reportsDir = path.join(process.cwd(), 'reports');
 
-async function sendReport() {
-    try {
-        // Get test type from command line argument
-        const testType = process.argv[2] || 'Unknown';
-        
-        // Read the test results JSON file
-        const resultsPath = path.join(process.cwd(), 'reports', `${testType.toLowerCase()}-test-results.json`);
-        const htmlReportPath = path.join(process.cwd(), 'reports', `${testType.toLowerCase()}-test-report.html`);
-        
-        if (!fs.existsSync(resultsPath) || !fs.existsSync(htmlReportPath)) {
-            throw new Error('Test results or HTML report not found');
-        }
+console.log(`Preparing to send ${testType} test report...`);
 
-        const testResults = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
-        
-        // Send email report
-        const sent = await sendEmailReport(testType, testResults, htmlReportPath);
-        
-        if (sent) {
-            console.log('Email report sent successfully');
-            process.exit(0);
-        } else {
-            console.error('Failed to send email report');
-            process.exit(1);
-        }
-    } catch (error) {
-        console.error('Error in send-report script:', error);
-        process.exit(1);
-    }
+// Check if reports directory exists
+if (!fs.existsSync(reportsDir)) {
+    console.log('Reports directory not found. Creating...');
+    fs.mkdirSync(reportsDir, { recursive: true });
 }
 
-sendReport(); 
+const testResultsPath = path.join(reportsDir, `${testType}-test-results.json`);
+const htmlReportPath = path.join(reportsDir, `${testType}-test-report.html`);
+
+// Check if report files exist
+if (!fs.existsSync(testResultsPath)) {
+    console.error(`Test results file not found: ${testResultsPath}`);
+    process.exit(1);
+}
+
+if (!fs.existsSync(htmlReportPath)) {
+    console.error(`HTML report file not found: ${htmlReportPath}`);
+    process.exit(1);
+}
+
+console.log('Loading test results...');
+const testResults = JSON.parse(fs.readFileSync(testResultsPath, 'utf8'));
+console.log('Test results loaded successfully');
+
+console.log('Email reporting is currently disabled. Reports are available in the reports directory:');
+console.log(`- Test Results: ${testResultsPath}`);
+console.log(`- HTML Report: ${htmlReportPath}`);
+
+// Email reporting temporarily disabled
+/*
+try {
+    console.log('Attempting to send email report...');
+    const success = await sendEmailReport(testType, testResults, htmlReportPath);
+    if (success) {
+        console.log('Email report sent successfully!');
+    } else {
+        console.error('Failed to send email report');
+        process.exit(1);
+    }
+} catch (error) {
+    console.error('Error sending email report:', error);
+    process.exit(1);
+}
+*/ 

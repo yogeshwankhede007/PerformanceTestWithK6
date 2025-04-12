@@ -1,29 +1,26 @@
 {
   "name": "performance-test-with-k6",
   "version": "1.0.0",
-  "description": "Performance testing framework using k6",
-  "type": "module",
+  "description": "Performance testing framework using K6",
+  "main": "index.js",
   "scripts": {
-    "smoke": "k6 run src/tests/smoke-test.js && node scripts/send-report.js Smoke",
-    "load": "k6 run src/tests/load-test.js && node scripts/send-report.js Load",
-    "stress": "k6 run src/tests/stress-test.js && node scripts/send-report.js Stress",
-    "spike": "k6 run src/tests/spike-test.js && node scripts/send-report.js Spike",
-    "soak": "k6 run src/tests/soak-test.js && node scripts/send-report.js Soak",
-    "all": "npm run smoke && npm run load && npm run stress && npm run spike"
-  },
-  "dependencies": {
-    "dotenv": "^16.0.3",
-    "nodemailer": "^6.9.1"
-  },
-  "devDependencies": {
-    "k6": "^0.0.0"
+    "test": "k6 run src/tests/reqres-api-test.js",
+    "smoke": "k6 run src/tests/smoke-test.js",
+    "load": "k6 run src/tests/load-test.js",
+    "stress": "k6 run src/tests/stress-test.js",
+    "spike": "k6 run src/tests/spike-test.js",
+    "report": "node scripts/send-report.js",
+    "test:ci": "k6 run --out json=reports/test-results.json src/tests/reqres-api-test.js"
   },
   "keywords": [
     "k6",
     "performance-testing",
     "load-testing",
-    "automation"
+    "api-testing"
   ],
   "author": "Yogesh Wankhede",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nodemailer": "^6.9.7"
+  }
 } 

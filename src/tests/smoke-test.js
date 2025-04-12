@@ -4,6 +4,7 @@ import { tag, group } from 'k6';
 import { baseConfig } from '../config/base-config.js';
 import { logger } from '../utils/logger.js';
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
 
 // Default configuration
 const BASE_URL = __ENV.BASE_URL || 'https://reqres.in/api';
@@ -33,10 +34,12 @@ const testData = {
 // Handle the end of the test
 export function handleSummary(data) {
   return {
-    "reports/smoke-test-report.html": htmlReport(data, {
+    'reports/smoke-test-report.html': htmlReport(data, {
       title: "Smoke Test Results",
       showTags: true,
     }),
+    'reports/smoke-test-results.json': JSON.stringify(data, null, 2),
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
   };
 }
 

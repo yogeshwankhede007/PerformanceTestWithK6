@@ -135,7 +135,7 @@ Key Metrics from Latest Run:
 
 ### Console Output
 
-![K6 Console Output](<img width="765" alt="Screenshot 2025-04-13 at 12 38 06 AM" src="https://github.com/user-attachments/assets/14a66e6e-5df7-49aa-b3ab-4807b85c4e8f" />)
+![K6 Console Output](https://github.com/user-attachments/assets/14a66e6e-5df7-49aa-b3ab-4807b85c4e8f)
 
 Sample Response Times:
 - List Users: 56.324ms
@@ -145,7 +145,7 @@ Sample Response Times:
 - Delete User: 304.546ms
 
 ### GitHub Actions Workflow
-![GitHub Actions Jobs](<img width="1799" alt="Screenshot 2025-04-13 at 12 34 16 AM" src="https://github.com/user-attachments/assets/d4869989-6a71-4bc6-85e4-37871a522691" />)
+![GitHub Actions Jobs](https://github.com/user-attachments/assets/d4869989-6a71-4bc6-85e4-37871a522691)
 
 
 ## 📁 Project Structure

@@ -76,8 +76,6 @@ A modern, comprehensive performance testing framework using K6, following indust
 
 ### HTML Report
 ![K6 Load Test Report](https://github.com/user-attachments/assets/c756935d-4f7b-4874-8656-3e209e11b01a)
-![K6 Load Test Stats](https://github.com/user-attachments/assets/6f6fb764-8f6c-45ca-8c2e-c72ffcc2f5aa)
-![K6 Load Test Checks](https://github.com/user-attachments/assets/6e063830-9c22-418f-bcad)
 
 Key Metrics from Latest Run:
 - Total Requests: 3535
@@ -88,7 +86,7 @@ Key Metrics from Latest Run:
 - Virtual Users: Max 10
 
 ### Console Output
-![K6 Console Output](docs/images/console-output.png)
+![K6 Console Output](https://github.com/user-attachments/assets/4b366b43-91b9-42db-a614-168bd21daaa9)
 
 Sample Response Times:
 - List Users: 56.324ms
@@ -98,7 +96,8 @@ Sample Response Times:
 - Delete User: 304.546ms
 
 ### GitHub Actions Workflow
-![GitHub Actions Jobs](docs/images/github-actions.png)
+
+![GitHub Actions Jobs](https://github.com/user-attachments/assets/5f5288bf-308f-4793-8ebb-ecd4c2b3627)
 
 ## 📁 Project Structure
 ```

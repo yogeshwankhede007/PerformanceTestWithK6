@@ -75,9 +75,9 @@ A modern, comprehensive performance testing framework using K6, following indust
 ## 📊 Test Results
 
 ### HTML Report
-![K6 Load Test Report](docs/images/html-report-1.png)
-![K6 Load Test Stats](docs/images/html-report-2.png)
-![K6 Load Test Checks](docs/images/html-report-3.png)
+![K6 Load Test Report](https://github.com/user-attachments/assets/c756935d-4f7b-4874-8656-3e209e11b01a)
+![K6 Load Test Stats](https://github.com/user-attachments/assets/6f6fb764-8f6c-45ca-8c2e-c72ffcc2f5aa)
+![K6 Load Test Checks](https://github.com/user-attachments/assets/6e063830-9c22-418f-bcad)
 
 Key Metrics from Latest Run:
 - Total Requests: 3535

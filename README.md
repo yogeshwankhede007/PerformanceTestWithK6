@@ -283,6 +283,45 @@ Made with ❤️ by [Your Name]
 
 This project contains a comprehensive performance testing suite built with k6 for testing RESTful APIs. The suite includes smoke tests, load tests, stress tests, and spike tests.
 
+## Test Results
+
+### HTML Report
+![K6 Load Test Report](docs/images/html-report-1.png)
+![K6 Load Test Stats](docs/images/html-report-2.png)
+![K6 Load Test Checks](docs/images/html-report-3.png)
+
+Key Metrics from Latest Run:
+- Total Requests: 3535
+- Failed Requests: 0
+- Breached Thresholds: 0
+- Failed Checks: 5
+- Response Time (p95): 287.50ms
+- Virtual Users: Max 10
+
+### Console Output
+![K6 Console Output](docs/images/console-output.png)
+
+Sample Response Times:
+- List Users: 56.324ms
+- Single User: 44.049ms
+- Create User: 497.433ms
+- Update User: 616.323ms
+- Delete User: 304.546ms
+
+### GitHub Actions Workflow
+![GitHub Actions Jobs](docs/images/github-actions.png)
+
+Workflow Steps:
+- ✅ Set up job (1s)
+- ✅ Checkout code (1s)
+- ✅ Setup Node.js (8s)
+- ✅ Install k6 (11s)
+- ✅ Create reports directory (8s)
+- ✅ Run Smoke Test (8s)
+- ✅ Run API Test (38s)
+- ✅ Upload Test Reports (1s)
+- ✅ Upload Test Summary (8s)
+
 ## Test Types
 
 ### 1. Smoke Test (`src/tests/smoke-test.js`)

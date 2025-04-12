@@ -19,8 +19,56 @@ A modern, comprehensive performance testing framework using K6, following indust
 - [Configuration](#-configuration)
 - [Best Practices](#-best-practices)
 - [Contributing](#-contributing)
+- [Documentation](#-documentation)
 - [Troubleshooting](#-troubleshooting)
 - [License](#-license)
+
+## 📚 Documentation
+
+### Technical Documentation
+Our framework is supported by comprehensive technical documentation to ensure proper implementation and usage:
+
+#### 📋 Test Plan
+The [Test Plan](docs/TEST_PLAN.md) provides a detailed overview of our testing strategy, including:
+- Test objectives and scope
+- Test scenarios and execution plans
+- Success criteria and metrics
+- Risk assessment and mitigation strategies
+- Test environment specifications
+
+<details>
+<summary>Key Test Plan Highlights</summary>
+
+- **Comprehensive Test Coverage**: Load, stress, spike, and smoke testing
+- **Clear Success Metrics**: Response time < 500ms (95th percentile)
+- **Detailed Monitoring**: Real-time metrics and HTML reporting
+- **Risk Management**: Identified risks and mitigation strategies
+- **Exit Criteria**: Defined completion requirements
+</details>
+
+#### 📘 Requirements Document
+The [Requirements Document](docs/REQUIREMENTS.md) outlines all technical and functional requirements:
+- System requirements and prerequisites
+- Functional and non-functional requirements
+- API specifications and security requirements
+- Quality standards and support requirements
+- Future roadmap and scalability plans
+
+<details>
+<summary>Key Requirements Highlights</summary>
+
+- **System Prerequisites**: Hardware and software specifications
+- **Feature Coverage**: ✅ All core testing types implemented
+- **Security Standards**: Authentication and data protection
+- **Quality Metrics**: Code and test quality requirements
+- **Future Plans**: Distributed testing and cloud deployment roadmap
+</details>
+
+### Quick Reference Links
+| Document | Purpose | Key Sections |
+|----------|----------|-------------|
+| [Test Plan](docs/TEST_PLAN.md) | Testing Strategy | Test Scenarios, Success Criteria, Execution Plan |
+| [Requirements](docs/REQUIREMENTS.md) | Technical Specifications | System Requirements, API Specs, Security Standards |
 
 ## ✨ Features
 

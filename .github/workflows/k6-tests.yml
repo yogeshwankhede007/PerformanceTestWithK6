@@ -2,35 +2,33 @@ name: K6 Performance Tests
 
 on:
   push:
-    branches: [ main, feature/* ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
-
-permissions:
-  contents: read
-  actions: write
-  checks: write
-  id-token: write
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight UTC
 
 jobs:
-  k6_tests:
-    name: Run K6 Tests
+  k6_performance_tests:
+    name: Run K6 Performance Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Install k6
         run: |
-          sudo gpg -k
-          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
           sudo apt-get update
           sudo apt-get install k6
 
@@ -39,29 +37,41 @@ jobs:
 
       - name: Run Smoke Test
         run: k6 run src/tests/smoke-test.js
+        env:
+          K6_OUT: json=reports/smoke-test-results.json
+          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
 
-      - name: Run API Test
-        run: k6 run src/tests/reqres-api-test.js
+      - name: Run Load Test
+        run: k6 run src/tests/load-test.js
+        env:
+          K6_OUT: json=reports/load-test-results.json
+          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
 
-      - name: List reports directory
-        run: ls -la reports/
+      - name: Send Email Reports
+        run: |
+          node scripts/send-report.js "Smoke"
+          node scripts/send-report.js "Load"
+        env:
+          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
 
       - name: Upload Test Reports
-        if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: k6-test-reports
           path: reports/
           retention-days: 30
-          if-no-files-found: warn
 
-      - name: Upload Test Summary
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: k6-test-summary
-          path: |
-            reports/*.html
-            reports/*.json
-          retention-days: 30
-          if-no-files-found: warn 
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          node scripts/send-report.js "Failed"
+        env:
+          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }} 

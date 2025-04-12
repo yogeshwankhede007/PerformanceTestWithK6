@@ -12,6 +12,10 @@ jobs:
   k6_performance_tests:
     name: Run K6 Performance Tests
     runs-on: ubuntu-latest
+    env:
+      EMAIL_USER: sdetyogesh@proton.me
+      EMAIL_RECIPIENT: yogi.wankhede007@gmail.com
+      ENVIRONMENT: staging
 
     steps:
       - name: Checkout code
@@ -39,16 +43,12 @@ jobs:
         run: k6 run src/tests/smoke-test.js
         env:
           K6_OUT: json=reports/smoke-test-results.json
-          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
 
       - name: Run Load Test
         run: k6 run src/tests/load-test.js
         env:
           K6_OUT: json=reports/load-test-results.json
-          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
 
       - name: Send Email Reports
@@ -56,8 +56,6 @@ jobs:
           node scripts/send-report.js "Smoke"
           node scripts/send-report.js "Load"
         env:
-          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
 
       - name: Upload Test Reports
@@ -72,6 +70,4 @@ jobs:
         run: |
           node scripts/send-report.js "Failed"
         env:
-          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }} 

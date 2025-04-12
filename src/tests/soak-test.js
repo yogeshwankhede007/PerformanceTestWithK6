@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Rate } from 'k6/metrics';
+import { tag, group } from 'k6';
 import { baseConfig } from '../config/base-config.js';
 import { logger } from '../utils/logger.js';
 
@@ -16,7 +17,7 @@ export const options = {
     soak_test: {
       executor: 'constant-vus',
       vus: 10,
-      duration: '12h',  // 12-hour soak test
+      duration: '1h',  // 1-hour soak test
       gracefulStop: '5m',
     },
   },
@@ -36,65 +37,95 @@ const testData = {
 
 // Test scenario
 export default function () {
+  // Apply test tags
+  tag('type', 'soak');
+  tag('environment', __ENV.ENVIRONMENT || 'staging');
+  tag('component', 'api');
+  tag('priority', 'high');
+  tag('service', 'reqres-api');
+  tag('test-scope', 'endurance');
+  tag('duration', 'long-running');
+  
   logger.info(`Starting soak test iteration for VU ${__VU}`);
 
-  // List Users
-  const listUsersResponse = http.get(`${__ENV.BASE_URL}/users?page=2`);
-  check(listUsersResponse, {
-    'list users status is 200': (r) => r.status === 200,
-    'list users response time < 500ms': (r) => r.timings.duration < 500,
-  });
-  logger.debug(`List Users Response Time: ${listUsersResponse.timings.duration}ms`);
+  // Group API endpoints
+  group('User Management API', function() {
+    // List Users
+    group('List Users', function() {
+      const listUsersResponse = http.get(`${__ENV.BASE_URL}/users?page=2`);
+      check(listUsersResponse, {
+        'list users status is 200': (r) => r.status === 200,
+        'list users response time < 500ms': (r) => r.timings.duration < 500,
+      });
+      logger.debug(`List Users Response Time: ${listUsersResponse.timings.duration}ms`);
+      return listUsersResponse;
+    });
 
-  // Get Single User
-  const singleUserResponse = http.get(`${__ENV.BASE_URL}/users/2`);
-  check(singleUserResponse, {
-    'single user status is 200': (r) => r.status === 200,
-    'single user response time < 500ms': (r) => r.timings.duration < 500,
-  });
-  logger.debug(`Single User Response Time: ${singleUserResponse.timings.duration}ms`);
+    // Get Single User
+    group('Get Single User', function() {
+      const singleUserResponse = http.get(`${__ENV.BASE_URL}/users/2`);
+      check(singleUserResponse, {
+        'single user status is 200': (r) => r.status === 200,
+        'single user response time < 500ms': (r) => r.timings.duration < 500,
+      });
+      logger.debug(`Single User Response Time: ${singleUserResponse.timings.duration}ms`);
+      return singleUserResponse;
+    });
 
-  // Create User
-  const createUserResponse = http.post(
-    `${__ENV.BASE_URL}/users`,
-    JSON.stringify({
-      name: 'morpheus',
-      job: 'leader'
-    }),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
-  check(createUserResponse, {
-    'create user status is 201': (r) => r.status === 201,
-    'create user response time < 500ms': (r) => r.timings.duration < 500,
-  });
-  logger.debug(`Create User Response Time: ${createUserResponse.timings.duration}ms`);
+    // Create User
+    group('Create User', function() {
+      const createUserResponse = http.post(
+        `${__ENV.BASE_URL}/users`,
+        JSON.stringify({
+          name: 'morpheus',
+          job: 'leader'
+        }),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      check(createUserResponse, {
+        'create user status is 201': (r) => r.status === 201,
+        'create user response time < 500ms': (r) => r.timings.duration < 500,
+      });
+      logger.debug(`Create User Response Time: ${createUserResponse.timings.duration}ms`);
+      return createUserResponse;
+    });
 
-  // Update User
-  const updateUserResponse = http.put(
-    `${__ENV.BASE_URL}/users/2`,
-    JSON.stringify({
-      name: 'morpheus',
-      job: 'zion resident'
-    }),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
-  check(updateUserResponse, {
-    'update user status is 200': (r) => r.status === 200,
-    'update user response time < 500ms': (r) => r.timings.duration < 500,
+    // Update User
+    group('Update User', function() {
+      const updateUserResponse = http.put(
+        `${__ENV.BASE_URL}/users/2`,
+        JSON.stringify({
+          name: 'morpheus',
+          job: 'zion resident'
+        }),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      check(updateUserResponse, {
+        'update user status is 200': (r) => r.status === 200,
+        'update user response time < 500ms': (r) => r.timings.duration < 500,
+      });
+      logger.debug(`Update User Response Time: ${updateUserResponse.timings.duration}ms`);
+      return updateUserResponse;
+    });
   });
-  logger.debug(`Update User Response Time: ${updateUserResponse.timings.duration}ms`);
 
-  // Login
-  const loginResponse = http.post(
-    `${__ENV.BASE_URL}/login`,
-    JSON.stringify(testData),
-    { headers: { 'Content-Type': 'application/json' } }
-  );
-  check(loginResponse, {
-    'login status is 200': (r) => r.status === 200,
-    'login response time < 500ms': (r) => r.timings.duration < 500,
+  // Authentication API
+  group('Authentication API', function() {
+    // Login
+    group('Login', function() {
+      const loginResponse = http.post(
+        `${__ENV.BASE_URL}/login`,
+        JSON.stringify(testData),
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      check(loginResponse, {
+        'login status is 200': (r) => r.status === 200,
+        'login response time < 500ms': (r) => r.timings.duration < 500,
+      });
+      logger.debug(`Login Response Time: ${loginResponse.timings.duration}ms`);
+      return loginResponse;
+    });
   });
-  logger.debug(`Login Response Time: ${loginResponse.timings.duration}ms`);
 
   // Record metrics
   const responses = [

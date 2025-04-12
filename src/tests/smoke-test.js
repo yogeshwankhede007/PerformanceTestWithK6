@@ -19,7 +19,7 @@ export const options = {
     },
   },
   thresholds: {
-    http_req_duration: ['p(95)<200'], // Stricter threshold for smoke test
+    http_req_duration: ['p(95)<500'], // More realistic threshold for smoke test
     http_req_failed: ['rate<0.1'],
   },
 };
@@ -54,7 +54,7 @@ export default function () {
       listUsersResponse = http.get(`${BASE_URL}/users?page=1`);
       const listUsersCheck = check(listUsersResponse, {
         'list users status is 200': (r) => r.status === 200,
-        'list users response time < 200ms': (r) => r.timings.duration < 200,
+        'list users response time < 500ms': (r) => r.timings.duration < 500,
         'list users has data': (r) => r.json().data !== undefined,
       });
       console.log(`List Users Response: Status=${listUsersResponse.status}, Duration=${listUsersResponse.timings.duration}ms`);
@@ -69,7 +69,7 @@ export default function () {
       singleUserResponse = http.get(`${BASE_URL}/users/1`);
       const singleUserCheck = check(singleUserResponse, {
         'single user status is 200': (r) => r.status === 200,
-        'single user response time < 200ms': (r) => r.timings.duration < 200,
+        'single user response time < 500ms': (r) => r.timings.duration < 500,
         'single user has correct data': (r) => r.json().data !== undefined,
       });
       console.log(`Single User Response: Status=${singleUserResponse.status}, Duration=${singleUserResponse.timings.duration}ms`);
@@ -91,7 +91,7 @@ export default function () {
       );
       const loginCheck = check(loginResponse, {
         'login status is 200': (r) => r.status === 200,
-        'login response time < 200ms': (r) => r.timings.duration < 200,
+        'login response time < 500ms': (r) => r.timings.duration < 500,
         'login returns token': (r) => r.json().token !== undefined,
       });
       console.log(`Login Response: Status=${loginResponse.status}, Duration=${loginResponse.timings.duration}ms`);

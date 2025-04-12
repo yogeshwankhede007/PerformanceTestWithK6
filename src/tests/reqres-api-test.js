@@ -39,25 +39,28 @@ function generateUserData() {
 
 // Test scenario
 export default function() {
+  // Initialize response variables
+  let listUsersResponse, singleUserResponse, createUserResponse, updateUserResponse, deleteUserResponse, loginResponse;
+
   group('User Management', function() {
     // List Users
-    const listUsers = http.get(`${BASE_URL}/users?page=2`);
-    check(listUsers, {
+    listUsersResponse = http.get(`${BASE_URL}/users?page=2`);
+    check(listUsersResponse, {
       'list users status is 200': (r) => r.status === 200,
       'list users has data': (r) => r.json().data !== undefined,
     });
-    console.log(`List Users Response: Status=${listUsers.status}, Duration=${listUsers.timings.duration}ms`);
+    console.log(`List Users Response: Status=${listUsersResponse.status}, Duration=${listUsersResponse.timings.duration}ms`);
 
     // Single User
-    const singleUser = http.get(`${BASE_URL}/users/2`);
-    check(singleUser, {
+    singleUserResponse = http.get(`${BASE_URL}/users/2`);
+    check(singleUserResponse, {
       'single user status is 200': (r) => r.status === 200,
       'single user has correct data': (r) => r.json().data !== undefined,
     });
-    console.log(`Single User Response: Status=${singleUser.status}, Duration=${singleUser.timings.duration}ms`);
+    console.log(`Single User Response: Status=${singleUserResponse.status}, Duration=${singleUserResponse.timings.duration}ms`);
 
     // Create User
-    const createUserResponse = http.post(
+    createUserResponse = http.post(
       `${BASE_URL}/users`,
       JSON.stringify(testUser),
       { headers: { 'Content-Type': 'application/json' } }
@@ -66,9 +69,10 @@ export default function() {
       'create user status is 201': (r) => r.status === 201,
       'create user response time < 500ms': (r) => r.timings.duration < 500,
     });
+    console.log(`Create User Response: Status=${createUserResponse.status}, Duration=${createUserResponse.timings.duration}ms`);
 
     // Update User
-    const updateUserResponse = http.put(
+    updateUserResponse = http.put(
       `${BASE_URL}/users/2`,
       JSON.stringify(generateUserData()),
       { headers: { 'Content-Type': 'application/json' } }
@@ -77,18 +81,20 @@ export default function() {
       'update user status is 200': (r) => r.status === 200,
       'update user response time < 500ms': (r) => r.timings.duration < 500,
     });
+    console.log(`Update User Response: Status=${updateUserResponse.status}, Duration=${updateUserResponse.timings.duration}ms`);
 
     // Delete User
-    const deleteUserResponse = http.del(`${BASE_URL}/users/2`);
+    deleteUserResponse = http.del(`${BASE_URL}/users/2`);
     check(deleteUserResponse, {
       'delete user status is 204': (r) => r.status === 204,
       'delete user response time < 500ms': (r) => r.timings.duration < 500,
     });
+    console.log(`Delete User Response: Status=${deleteUserResponse.status}, Duration=${deleteUserResponse.timings.duration}ms`);
   });
 
   group('Authentication', function() {
     // Login
-    const login = http.post(
+    loginResponse = http.post(
       `${BASE_URL}/login`,
       JSON.stringify({
         email: 'eve.holt@reqres.in',
@@ -96,21 +102,21 @@ export default function() {
       }),
       { headers: { 'Content-Type': 'application/json' } }
     );
-    check(login, {
+    check(loginResponse, {
       'login status is 200': (r) => r.status === 200,
       'login returns token': (r) => r.json().token !== undefined,
     });
-    console.log(`Login Response: Status=${login.status}, Duration=${login.timings.duration}ms`);
+    console.log(`Login Response: Status=${loginResponse.status}, Duration=${loginResponse.timings.duration}ms`);
   });
 
-  // Record errors
+  // Record errors and response times for all requests
   const allResponses = [
-    listUsers,
-    singleUser,
+    listUsersResponse,
+    singleUserResponse,
     createUserResponse,
     updateUserResponse,
     deleteUserResponse,
-    login
+    loginResponse
   ];
 
   allResponses.forEach(response => {
@@ -118,7 +124,7 @@ export default function() {
     responseTime.add(response.timings.duration < 500);
   });
 
-  // Think time between requests
+  // Think time between iterations
   sleep(1);
 }
 

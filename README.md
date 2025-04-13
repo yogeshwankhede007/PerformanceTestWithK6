@@ -145,6 +145,7 @@ Sample Response Times:
 - Delete User: 304.546ms
 
 ### GitHub Actions Workflow
+  
 ![GitHub Actions Jobs](https://github.com/user-attachments/assets/d4869989-6a71-4bc6-85e4-37871a522691)
 
 
@@ -253,15 +254,16 @@ export const options = {
 4. Check HTML reports
 5. Verify thresholds
 
+                        
+## Documentation
+
+- [Test Plan](docs/TEST_PLAN.md)
+- [Performance Recommendations](docs/PERFORMANCE_RECOMMENDATIONS.md)
+- [API Documentation](docs/API.md)
+                        
 ## 📄 License
 MIT License - see [LICENSE](LICENSE) file
 
 ---
 
 Made with ❤️ by Yogesh Wankhede 
-
-## Documentation
-
-- [Test Plan](docs/TEST_PLAN.md)
-- [Performance Recommendations](docs/PERFORMANCE_RECOMMENDATIONS.md)
-- [API Documentation](docs/API.md)

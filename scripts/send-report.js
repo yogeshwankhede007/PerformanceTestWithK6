@@ -1,53 +1,94 @@
 import { sendEmailReport } from '../src/utils/email-reporter.js';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
-const testType = process.argv[2] || 'smoke';
-const reportsDir = path.join(process.cwd(), 'reports');
+// Constants
+const REPORTS_DIR = 'reports';
+const DEFAULT_TEST_TYPE = 'smoke';
 
-console.log(`Preparing to send ${testType} test report...`);
+/**
+ * Main function to send test reports
+ * @returns {Promise<void>}
+ */
+async function main() {
+    try {
+        const testType = process.argv[2] || DEFAULT_TEST_TYPE;
+        console.log(`Preparing to send ${testType} test report...`);
 
-// Check if reports directory exists
-if (!fs.existsSync(reportsDir)) {
-    console.log('Reports directory not found. Creating...');
-    fs.mkdirSync(reportsDir, { recursive: true });
-}
+        // Ensure reports directory exists
+        ensureReportsDirectory();
 
-const testResultsPath = path.join(reportsDir, `${testType}-test-results.json`);
-const htmlReportPath = path.join(reportsDir, `${testType}-test-report.html`);
+        // Get report file paths
+        const { testResultsPath, htmlReportPath } = getReportPaths(testType);
 
-// Check if report files exist
-if (!fs.existsSync(testResultsPath)) {
-    console.error(`Test results file not found: ${testResultsPath}`);
-    process.exit(1);
-}
+        // Validate report files
+        validateReportFiles(testResultsPath, htmlReportPath);
 
-if (!fs.existsSync(htmlReportPath)) {
-    console.error(`HTML report file not found: ${htmlReportPath}`);
-    process.exit(1);
-}
+        // Load test results
+        const testResults = loadTestResults(testResultsPath);
 
-console.log('Loading test results...');
-const testResults = JSON.parse(fs.readFileSync(testResultsPath, 'utf8'));
-console.log('Test results loaded successfully');
+        // Send email report (currently disabled)
+        console.log('Email reporting is currently disabled. Reports are available in the reports directory:');
+        console.log(`- Test Results: ${testResultsPath}`);
+        console.log(`- HTML Report: ${htmlReportPath}`);
 
-console.log('Email reporting is currently disabled. Reports are available in the reports directory:');
-console.log(`- Test Results: ${testResultsPath}`);
-console.log(`- HTML Report: ${htmlReportPath}`);
-
-// Email reporting temporarily disabled
-/*
-try {
-    console.log('Attempting to send email report...');
-    const success = await sendEmailReport(testType, testResults, htmlReportPath);
-    if (success) {
-        console.log('Email report sent successfully!');
-    } else {
-        console.error('Failed to send email report');
+    } catch (error) {
+        console.error('Error in send-report script:', error.message);
         process.exit(1);
     }
-} catch (error) {
-    console.error('Error sending email report:', error);
-    process.exit(1);
 }
-*/ 
+
+/**
+ * Ensures the reports directory exists
+ */
+function ensureReportsDirectory() {
+    if (!fs.existsSync(REPORTS_DIR)) {
+        console.log('Reports directory not found. Creating...');
+        fs.mkdirSync(REPORTS_DIR, { recursive: true });
+    }
+}
+
+/**
+ * Gets the paths for test report files
+ * @param {string} testType - Type of test
+ * @returns {Object} - Object containing test results and HTML report paths
+ */
+function getReportPaths(testType) {
+    return {
+        testResultsPath: path.join(REPORTS_DIR, `${testType}-test-results.json`),
+        htmlReportPath: path.join(REPORTS_DIR, `${testType}-test-report.html`)
+    };
+}
+
+/**
+ * Validates that report files exist
+ * @param {string} testResultsPath - Path to test results file
+ * @param {string} htmlReportPath - Path to HTML report file
+ */
+function validateReportFiles(testResultsPath, htmlReportPath) {
+    if (!fs.existsSync(testResultsPath)) {
+        throw new Error(`Test results file not found: ${testResultsPath}`);
+    }
+
+    if (!fs.existsSync(htmlReportPath)) {
+        throw new Error(`HTML report file not found: ${htmlReportPath}`);
+    }
+}
+
+/**
+ * Loads and parses test results from JSON file
+ * @param {string} testResultsPath - Path to test results file
+ * @returns {Object} - Parsed test results
+ */
+function loadTestResults(testResultsPath) {
+    console.log('Loading test results...');
+    const testResults = JSON.parse(fs.readFileSync(testResultsPath, 'utf8'));
+    console.log('Test results loaded successfully');
+    return testResults;
+}
+
+// Execute the main function
+main().catch(error => {
+    console.error('Unhandled error in main:', error);
+    process.exit(1);
+}); 

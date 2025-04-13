@@ -1,116 +1,92 @@
 import http from 'k6/http';
-import { check, sleep } from 'k6';
-import { tag, group } from 'k6';
-import { baseConfig } from '../config/base-config.js';
-import { logger } from '../utils/logger.js';
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
+import { check, sleep, tag, group } from 'k6';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 
-// Default configuration
-const BASE_URL = __ENV.BASE_URL || 'https://reqres.in/api';
+// Constants
+const BASE_URL = 'https://reqres.in/api';
+const TEST_TIMEOUT = '30s';
+const SLEEP_DURATION = 1;
 
-// Smoke Test Configuration
+// Test configuration
 export const options = {
-  scenarios: {
-    smoke_test: {
-      executor: 'per-vu-iterations',
-      vus: 1,
-      iterations: 1,
-      maxDuration: '30s',
+    scenarios: {
+        smoke_test: {
+            executor: 'per-test-case',
+            vus: 1,
+            iterations: 1,
+            maxDuration: TEST_TIMEOUT,
+        }
     },
-  },
-  thresholds: {
-    http_req_duration: ['p(95)<500'], // More realistic threshold for smoke test
-    http_req_failed: ['rate<0.1'],
-  },
+    thresholds: {
+        http_req_duration: ['p(95)<500'],
+        http_req_failed: ['rate<0.01'],
+    }
 };
 
-// Test data
-const testData = {
-  email: 'eve.holt@reqres.in',
-  password: 'cityslicka',
-};
+// Helper function to make HTTP requests
+function makeRequest(method, endpoint, payload = null) {
+    const url = `${BASE_URL}${endpoint}`;
+    const params = {
+        tags: { name: endpoint },
+        timeout: '30s'
+    };
 
-// Handle the end of the test
-export function handleSummary(data) {
-  return {
-    'reports/smoke-test-report.html': htmlReport(data, {
-      title: "Smoke Test Results",
-      showTags: true,
-    }),
-    'reports/smoke-test-results.json': JSON.stringify(data, null, 2),
-    stdout: textSummary(data, { indent: ' ', enableColors: true }),
-  };
+    let response;
+    switch (method.toLowerCase()) {
+        case 'get':
+            response = http.get(url, params);
+            break;
+        case 'post':
+            response = http.post(url, JSON.stringify(payload), params);
+            break;
+        default:
+            throw new Error(`Unsupported HTTP method: ${method}`);
+    }
+
+    return response;
 }
 
-// Test scenario
+// Test cases
 export default function () {
-  console.log(`Starting smoke test against ${BASE_URL}`);
+    group('API Smoke Tests', function () {
+        // Test 1: List Users
+        const listUsersResponse = makeRequest('GET', '/users?page=2');
+        check(listUsersResponse, {
+            'List Users - Status is 200': (r) => r.status === 200,
+            'List Users - Response time < 500ms': (r) => r.timings.duration < 500,
+            'List Users - Has data': (r) => r.json().data.length > 0
+        });
+        sleep(SLEEP_DURATION);
 
-  let listUsersResponse, singleUserResponse, loginResponse;
+        // Test 2: Get Single User
+        const singleUserResponse = makeRequest('GET', '/users/2');
+        check(singleUserResponse, {
+            'Get Single User - Status is 200': (r) => r.status === 200,
+            'Get Single User - Response time < 500ms': (r) => r.timings.duration < 500,
+            'Get Single User - Has user data': (r) => r.json().data.id === 2
+        });
+        sleep(SLEEP_DURATION);
 
-  // Group API endpoints
-  group('User Management API', function() {
-    // List Users
-    group('List Users', function() {
-      console.log('Testing List Users endpoint...');
-      listUsersResponse = http.get(`${BASE_URL}/users?page=1`);
-      const listUsersCheck = check(listUsersResponse, {
-        'list users status is 200': (r) => r.status === 200,
-        'list users response time < 500ms': (r) => r.timings.duration < 500,
-        'list users has data': (r) => r.json().data !== undefined,
-      });
-      console.log(`List Users Response: Status=${listUsersResponse.status}, Duration=${listUsersResponse.timings.duration}ms`);
-      if (!listUsersCheck) {
-        console.error('List Users checks failed:', listUsersResponse.body);
-      }
+        // Test 3: Login
+        const loginPayload = {
+            email: 'eve.holt@reqres.in',
+            password: 'cityslicka'
+        };
+        const loginResponse = makeRequest('POST', '/login', loginPayload);
+        check(loginResponse, {
+            'Login - Status is 200': (r) => r.status === 200,
+            'Login - Response time < 500ms': (r) => r.timings.duration < 500,
+            'Login - Has token': (r) => r.json().token !== undefined
+        });
     });
+}
 
-    // Get Single User
-    group('Get Single User', function() {
-      console.log('Testing Get Single User endpoint...');
-      singleUserResponse = http.get(`${BASE_URL}/users/1`);
-      const singleUserCheck = check(singleUserResponse, {
-        'single user status is 200': (r) => r.status === 200,
-        'single user response time < 500ms': (r) => r.timings.duration < 500,
-        'single user has correct data': (r) => r.json().data !== undefined,
-      });
-      console.log(`Single User Response: Status=${singleUserResponse.status}, Duration=${singleUserResponse.timings.duration}ms`);
-      if (!singleUserCheck) {
-        console.error('Single User checks failed:', singleUserResponse.body);
-      }
-    });
-  });
-
-  // Authentication API
-  group('Authentication API', function() {
-    // Login
-    group('Login', function() {
-      console.log('Testing Login endpoint...');
-      loginResponse = http.post(
-        `${BASE_URL}/login`,
-        JSON.stringify(testData),
-        { headers: { 'Content-Type': 'application/json' } }
-      );
-      const loginCheck = check(loginResponse, {
-        'login status is 200': (r) => r.status === 200,
-        'login response time < 500ms': (r) => r.timings.duration < 500,
-        'login returns token': (r) => r.json().token !== undefined,
-      });
-      console.log(`Login Response: Status=${loginResponse.status}, Duration=${loginResponse.timings.duration}ms`);
-      if (!loginCheck) {
-        console.error('Login checks failed:', loginResponse.body);
-      }
-    });
-  });
-
-  // Overall test validation
-  if (listUsersResponse.status !== 200 || 
-      singleUserResponse.status !== 200 || 
-      loginResponse.status !== 200) {
-    console.error('Smoke test failed - one or more requests failed');
-    throw new Error('Smoke test failed - one or more requests failed');
-  }
-
-  console.log('Smoke test completed successfully');
+// Handle test summary
+export function handleSummary(data) {
+    return {
+        'reports/smoke-test-report.html': htmlReport(data),
+        'reports/smoke-test-results.json': JSON.stringify(data),
+        stdout: textSummary(data, { indent: ' ', enableColors: true })
+    };
 } 

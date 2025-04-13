@@ -1,21 +1,26 @@
 {
-  "name": "performance-testing-k6",
+  "name": "performance-test-with-k6",
   "version": "1.0.0",
-  "description": "Performance Testing Framework using K6",
+  "description": "Performance testing framework using K6",
   "main": "index.js",
   "scripts": {
-    "test": "k6 run",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "test": "k6 run src/tests/reqres-api-test.js",
+    "smoke": "k6 run src/tests/smoke-test.js",
+    "load": "k6 run src/tests/load-test.js",
+    "stress": "k6 run src/tests/stress-test.js",
+    "spike": "k6 run src/tests/spike-test.js",
+    "report": "node scripts/send-report.js",
+    "test:ci": "k6 run --out json=reports/test-results.json src/tests/reqres-api-test.js"
   },
+  "keywords": [
+    "k6",
+    "performance-testing",
+    "load-testing",
+    "api-testing"
+  ],
+  "author": "Yogesh Wankhede",
+  "license": "MIT",
   "dependencies": {
-    "k6": "^0.0.0",
-    "@grafana/k6": "^0.0.0",
-    "k6-html-reporter": "^0.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.0.0",
-    "prettier": "^3.0.0",
-    "@types/k6": "^0.0.0"
+    "nodemailer": "^6.9.7"
   }
 } 

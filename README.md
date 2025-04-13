@@ -19,8 +19,56 @@ A modern, comprehensive performance testing framework using K6, following indust
 - [Configuration](#-configuration)
 - [Best Practices](#-best-practices)
 - [Contributing](#-contributing)
+- [Documentation](#-documentation)
 - [Troubleshooting](#-troubleshooting)
 - [License](#-license)
+
+## 📚 Documentation
+
+### Technical Documentation
+Our framework is supported by comprehensive technical documentation to ensure proper implementation and usage:
+
+#### 📋 Test Plan
+The [Test Plan](docs/TEST_PLAN.md) provides a detailed overview of our testing strategy, including:
+- Test objectives and scope
+- Test scenarios and execution plans
+- Success criteria and metrics
+- Risk assessment and mitigation strategies
+- Test environment specifications
+
+<details>
+<summary>Key Test Plan Highlights</summary>
+
+- **Comprehensive Test Coverage**: Load, stress, spike, and smoke testing
+- **Clear Success Metrics**: Response time < 500ms (95th percentile)
+- **Detailed Monitoring**: Real-time metrics and HTML reporting
+- **Risk Management**: Identified risks and mitigation strategies
+- **Exit Criteria**: Defined completion requirements
+</details>
+
+#### 📘 Requirements Document
+The [Requirements Document](docs/REQUIREMENTS.md) outlines all technical and functional requirements:
+- System requirements and prerequisites
+- Functional and non-functional requirements
+- API specifications and security requirements
+- Quality standards and support requirements
+- Future roadmap and scalability plans
+
+<details>
+<summary>Key Requirements Highlights</summary>
+
+- **System Prerequisites**: Hardware and software specifications
+- **Feature Coverage**: ✅ All core testing types implemented
+- **Security Standards**: Authentication and data protection
+- **Quality Metrics**: Code and test quality requirements
+- **Future Plans**: Distributed testing and cloud deployment roadmap
+</details>
+
+### Quick Reference Links
+| Document | Purpose | Key Sections |
+|----------|----------|-------------|
+| [Test Plan](docs/TEST_PLAN.md) | Testing Strategy | Test Scenarios, Success Criteria, Execution Plan |
+| [Requirements](docs/REQUIREMENTS.md) | Technical Specifications | System Requirements, API Specs, Security Standards |
 
 ## ✨ Features
 
@@ -86,7 +134,8 @@ Key Metrics from Latest Run:
 - Virtual Users: Max 10
 
 ### Console Output
-![K6 Console Output](https://github.com/user-attachments/assets/4b366b43-91b9-42db-a614-168bd21daaa9)
+
+![K6 Console Output](https://github.com/user-attachments/assets/14a66e6e-5df7-49aa-b3ab-4807b85c4e8f)
 
 Sample Response Times:
 - List Users: 56.324ms
@@ -96,8 +145,9 @@ Sample Response Times:
 - Delete User: 304.546ms
 
 ### GitHub Actions Workflow
+  
+![GitHub Actions Jobs](https://github.com/user-attachments/assets/d4869989-6a71-4bc6-85e4-37871a522691)
 
-![GitHub Actions Jobs](https://github.com/user-attachments/assets/5f5288bf-308f-4793-8ebb-ecd4c2b3627)
 
 ## 📁 Project Structure
 ```
@@ -204,6 +254,13 @@ export const options = {
 4. Check HTML reports
 5. Verify thresholds
 
+                        
+## Documentation
+
+- [Test Plan](docs/TEST_PLAN.md)
+- [Performance Recommendations](docs/PERFORMANCE_RECOMMENDATIONS.md)
+- [API Documentation](docs/API.md)
+                        
 ## 📄 License
 MIT License - see [LICENSE](LICENSE) file
 

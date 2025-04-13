@@ -64,4 +64,4 @@ jobs:
             reports/*.html
             reports/*.json
           retention-days: 30
-          if-no-files-found: warn 
+          if-no-files-found: warn

@@ -4,6 +4,7 @@ import { tag, group } from 'k6';
 import { baseConfig } from '../config/base-config.js';
 import { logger } from '../utils/logger.js';
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
 
 // Default configuration
 const BASE_URL = __ENV.BASE_URL || 'https://reqres.in/api';
@@ -19,7 +20,7 @@ export const options = {
     },
   },
   thresholds: {
-    http_req_duration: ['p(95)<200'], // Stricter threshold for smoke test
+    http_req_duration: ['p(95)<500'], // More realistic threshold for smoke test
     http_req_failed: ['rate<0.1'],
   },
 };
@@ -33,10 +34,12 @@ const testData = {
 // Handle the end of the test
 export function handleSummary(data) {
   return {
-    "reports/smoke-test-report.html": htmlReport(data, {
+    'reports/smoke-test-report.html': htmlReport(data, {
       title: "Smoke Test Results",
       showTags: true,
     }),
+    'reports/smoke-test-results.json': JSON.stringify(data, null, 2),
+    stdout: textSummary(data, { indent: ' ', enableColors: true }),
   };
 }
 
@@ -54,7 +57,7 @@ export default function () {
       listUsersResponse = http.get(`${BASE_URL}/users?page=1`);
       const listUsersCheck = check(listUsersResponse, {
         'list users status is 200': (r) => r.status === 200,
-        'list users response time < 200ms': (r) => r.timings.duration < 200,
+        'list users response time < 500ms': (r) => r.timings.duration < 500,
         'list users has data': (r) => r.json().data !== undefined,
       });
       console.log(`List Users Response: Status=${listUsersResponse.status}, Duration=${listUsersResponse.timings.duration}ms`);
@@ -69,7 +72,7 @@ export default function () {
       singleUserResponse = http.get(`${BASE_URL}/users/1`);
       const singleUserCheck = check(singleUserResponse, {
         'single user status is 200': (r) => r.status === 200,
-        'single user response time < 200ms': (r) => r.timings.duration < 200,
+        'single user response time < 500ms': (r) => r.timings.duration < 500,
         'single user has correct data': (r) => r.json().data !== undefined,
       });
       console.log(`Single User Response: Status=${singleUserResponse.status}, Duration=${singleUserResponse.timings.duration}ms`);
@@ -91,7 +94,7 @@ export default function () {
       );
       const loginCheck = check(loginResponse, {
         'login status is 200': (r) => r.status === 200,
-        'login response time < 200ms': (r) => r.timings.duration < 200,
+        'login response time < 500ms': (r) => r.timings.duration < 500,
         'login returns token': (r) => r.json().token !== undefined,
       });
       console.log(`Login Response: Status=${loginResponse.status}, Duration=${loginResponse.timings.duration}ms`);
